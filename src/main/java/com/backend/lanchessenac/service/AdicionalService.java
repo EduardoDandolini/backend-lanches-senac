@@ -7,6 +7,7 @@ import com.backend.lanchessenac.exception.NotFoundException;
 import com.backend.lanchessenac.repository.AdicionalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +18,10 @@ public class AdicionalService {
 
     private final AdicionalRepository adicionalRepository;
 
+    @Transactional
     public Adicional salvar(AdicionalDTO dto){
-        Adicional adicionalEncontrado = adicionalRepository.findByNome(dto.nome());
-        if (adicionalEncontrado != null && adicionalEncontrado.getNome().equalsIgnoreCase(dto.nome())) {
+       Adicional adicionalExistente = adicionalRepository.findByNome(dto.nome());
+        if (adicionalExistente != null) {
             throw new ConflictException("Já existe um Adicional com esse nome no banco de dados");
         }
 
@@ -29,32 +31,38 @@ public class AdicionalService {
         return adicionalRepository.save(adicionalSalvo);
     }
 
+    @Transactional
     public Adicional findByNome(String nome){
         return adicionalRepository.findByNome(nome);
     }
 
+    @Transactional
     public List<Adicional> findAll(){
         return adicionalRepository.findAll();
     }
 
+    @Transactional
     public void excluir(String nome){
         Adicional adicional = adicionalRepository.findByNome(nome);
 
-        if (adicional != null) {
-            adicionalRepository.delete(adicional);
+        if (adicional == null) {
+            throw new NotFoundException("Adicional não encontrado");
         }
-
-        throw new RuntimeException("Adicional não encontrado");
+        adicionalRepository.delete(adicional);
     }
 
+    @Transactional
     public Adicional atualizar(String nome, AdicionalDTO dto){
         Adicional adicional = adicionalRepository.findByNome(nome);
 
-        if (adicional != null) {
-            return Adicional.builder()
-                    .nome(dto.nome())
-                    .build();
+        if (adicional == null) {
+            throw new NotFoundException("Adicional não encontrado");
         }
-        throw new NotFoundException("Adicional não encontrado");
+        if (adicional.getNome().equalsIgnoreCase(dto.nome())) {
+            throw new ConflictException("Já existe um Adicional com esse nome no banco de dados");
+        }
+        adicional.setNome(dto.nome());
+        return adicionalRepository.save(adicional);
+
     }
 }

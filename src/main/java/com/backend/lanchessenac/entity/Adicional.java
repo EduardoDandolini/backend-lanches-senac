@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "tb_adicionais")
+@Table(name = "tb_adicional")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

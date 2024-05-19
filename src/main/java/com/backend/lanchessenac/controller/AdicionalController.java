@@ -18,7 +18,7 @@ public class AdicionalController {
         return ResponseEntity.ok(adicionalService.salvar(dto));
     }
 
-    @GetMapping("/listar/all")
+    @GetMapping("/listar/todos")
     public ResponseEntity findAll(){
         return ResponseEntity.ok(adicionalService.findAll());
     }
