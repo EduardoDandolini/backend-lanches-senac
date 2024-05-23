@@ -6,6 +6,7 @@ import com.backend.lanchessenac.dto.FuncionarioDto;
 import com.backend.lanchessenac.entity.Funcionario;
 import com.backend.lanchessenac.exception.BadRequestException;
 import com.backend.lanchessenac.exception.ConflictException;
+import com.backend.lanchessenac.exception.NotFoundException;
 import com.backend.lanchessenac.repository.FuncionarioRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -52,6 +53,19 @@ public class FuncionarioService {
             cpfValidator.assertValid(cpf);
         } catch (InvalidStateException invalidStateException) {
             throw new BadRequestException("CPF inválido - " + invalidStateException.getMessage());
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteFuncionario(@NotNull Long idFuncionario) {
+        checaSeFuncionarioExiste(idFuncionario);
+        funcionarioRepository.deleteById(idFuncionario);
+    }
+
+    @Transactional
+    public void checaSeFuncionarioExiste(@NotNull Long idFuncionario) {
+        if (!funcionarioRepository.existsById(idFuncionario)) {
+            throw new NotFoundException("Funcionário não encontrado");
         }
     }
 

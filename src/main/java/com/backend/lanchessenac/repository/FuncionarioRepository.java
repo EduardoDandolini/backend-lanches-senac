@@ -10,4 +10,5 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
     boolean existsByNomeIgnoreCase(@Param("nome") String nome);
 
     boolean existsByCpf(String cpf);
+
 }
