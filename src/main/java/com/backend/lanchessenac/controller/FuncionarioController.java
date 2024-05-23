@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/employee")
@@ -23,7 +25,12 @@ public class FuncionarioController {
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteFuncionario(@PathVariable("id") @NotNull Long funcionarioId) {
+        funcionarioService.deleteFuncionario(funcionarioId);
+    }
 
+    @GetMapping("/list/all")
+    public List<FuncionarioDto> listAllFuncionarios() {
+        return funcionarioService.listAllFuncionarios();
     }
 
 }

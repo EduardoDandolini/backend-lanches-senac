@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Valid
 @Service
 @RequiredArgsConstructor
@@ -67,6 +69,13 @@ public class FuncionarioService {
         if (!funcionarioRepository.existsById(idFuncionario)) {
             throw new NotFoundException("Funcionário não encontrado");
         }
+    }
+
+    @Transactional
+    public List<FuncionarioDto> listAllFuncionarios() {
+        List<Funcionario> funcionarioList = funcionarioRepository.findAll();
+        return funcionarioList.stream().map(funcionario -> new FuncionarioDto(
+                funcionario.getId(), funcionario.getNome(), funcionario.getCpf(), funcionario.getCargo())).toList();
     }
 
 }
