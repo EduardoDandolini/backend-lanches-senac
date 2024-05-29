@@ -36,6 +36,19 @@ public class FuncionarioService {
     }
 
     @Transactional(rollbackFor = Exception.class)
+    public void updateFuncionario(@NotNull Long idFuncionario, @NotNull FuncionarioDto funcionarioDto) {
+        Funcionario funcionario = funcionarioRepository
+                .findById(idFuncionario)
+                .orElseThrow(() -> new NotFoundException("Funcionário não encontrado"));
+
+        funcionario.setNome(funcionario.getNome());
+        funcionario.setCpf(funcionario.getCpf());
+
+        validaCpf(funcionarioDto.cpf());
+        funcionarioRepository.save(new Funcionario(funcionarioDto));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
     public void checkIfNameFuncionarioWasExists(@NotBlank String name) {
         if (funcionarioRepository.existsByNomeIgnoreCase(name)) {
             throw new ConflictException("Já existe um Funcionário cadastrado com esse nome");
