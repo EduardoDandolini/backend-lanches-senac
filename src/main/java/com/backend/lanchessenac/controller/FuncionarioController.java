@@ -22,6 +22,12 @@ public class FuncionarioController {
         funcionarioService.saveNewFuncionario(funcionarioDto);
     }
 
+    @PutMapping("/update/{idFuncionario}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateFuncionario(@PathVariable("idFuncionario") Long idFuncionario, @RequestBody FuncionarioDto funcionarioDto) {
+        funcionarioService.updateFuncionario(idFuncionario, funcionarioDto);
+    }
+
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteFuncionario(@PathVariable("id") @NotNull Long funcionarioId) {
